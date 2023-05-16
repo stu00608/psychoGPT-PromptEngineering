@@ -1,0 +1,15 @@
+{
+    "report": {
+        "name": "<Traditional Chinese string>",
+        "personal_information": "<Traditional Chinese string>",
+        "presenting_issue": "<Traditional Chinese string>",
+        "issue_history": "<Traditional Chinese string>",
+        "medical_history": "<Traditional Chinese string>",
+        "personal_background": "<Traditional Chinese string>",
+        "social_relationships": "<Traditional Chinese string>",
+        "family_relationships": "<Traditional Chinese string>",
+        "family_background": "<Traditional Chinese string>",
+        "therapy_goals": "<Traditional Chinese string>",
+        "missing_information": "<Traditional Chinese string>"
+    }
+}

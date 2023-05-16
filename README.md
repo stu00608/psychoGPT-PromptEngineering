@@ -46,12 +46,13 @@ Generate 100 answers cost about $4
 ### `generate_report.py`
 
 - `--answers_path`: Path to the directory containing the generated answers (default is "cleaned_answers").
+- `--response_template_path`: Path to the JSON file containing the response template (default is "response_template.json").
 
 ```bash
-python generate_report.py --model gpt-4 --temperature 0.7 --max_tokens 1000 --thread_num 2 --questions_path questions.json --answers_path ./cleaned_answers/ --openai_api_key <your-api-key>
+python generate_report.py --model gpt-3.5-turbo --temperature 0.7 --max_tokens 1000 --thread_num 2 --questions_path questions.json --response_template_path response_template.json --answers_path ./cleaned_answers/ --openai_api_key <your-api-key>
 ```
 
-Generate 100 reports cost about $8
+Generate 100 reports cost about $0.2
 
 
 ## Example
@@ -93,35 +94,43 @@ The script will generate 10 responses to these questions, emulating the persona 
 Then you can run `generate_report.py` to generate reports from the generated answers:
 
 ```bash
-python generate_report.py --model gpt-4 --temperature 0.7 --max_tokens 1000 --thread_num 2 --questions_path questions.json --answers_path ./cleaned_answers/ --openai_api_key <your-api-key>
+python generate_report.py --model gpt-3.5-turbo --temperature 0.7 --max_tokens 1000 --thread_num 2 --questions_path questions.json --response_template_path response_template.json --answers_path ./cleaned_answers/ --openai_api_key <your-api-key>
 ```
 
 Finally you'll see the report in `cleaned_reports` directory. An example like this:
 
 ```txt
+# 李偉民 的分析報告
+
 ## 個人資料
-- 林先生，42歲，教師。
+李偉民，男性，42歲，官員。
 
 ## 想要解決的問題
-- 無法應對工作和個人生活壓力。
+李偉民因在工作中遇到道德困境而感到困惑和掙扎，希望透過心理治療來處理這個問題。
 
 ## 問題的緣由
-- 教學工作繁重，壓力持續幾個月。
+李偉民透露這個問題已經持續了幾個月，以前沒有接受過諮商或心理治療。
 
 ## 疾病歷史
-- 無諮商或心理治療經驗。
-- 無疾病或用藥情況。
+目前沒有任何疾病或用藥的情況。
 
-## 個人和社交背景
-- 擅長教學和溝通，喜歡閱讀和運動。
-- 與朋友的聯繫變得比較少。
+## 個人背景
+李偉民的童年過得還算不錯，沒有特別深刻的重大事件。個性正直、公平、有遠見。喜歡閱讀歷史書籍，擅長溝通協調。
+
+## 社交關係
+李偉民與家人和朋友的關係都很融洽，相互支持。
+
+## 家庭關係
+沒有提到明顯的家庭問題。
 
 ## 家庭背景
-- 與家人關係良好。
-- 無心理健康問題病史。
+沒有提到明顯的家庭問題。
 
 ## 治療目標
-- 學會更好地應對壓力，改善心理健康狀況。
+李偉民希望透過心理治療來處理道德困境，增強自信心，並能夠更好地應對工作和生活中的壓力。
+
+## 遺漏資訊
+沒有提到明顯的缺失信息。
 ```
 
 Any result that is not valid will be saved in `extracted_failed_answers` and `extracted_failed_reports` directory.
