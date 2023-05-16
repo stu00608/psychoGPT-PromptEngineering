@@ -6,6 +6,7 @@ import re
 import json
 import time
 import openai
+import random
 import traceback
 import tiktoken
 import argparse
@@ -36,7 +37,7 @@ def extract_answer(string):
 
     return None 
 
-def make_prompt(questions: list, return_str: bool = False):
+def make_prompt(questions: list, character: str, return_str: bool = False):
     questions = "\n".join([f"{i+1}. {q}" for i, q in enumerate(questions)])
     text = f"""The assistant must return the following structure:
 
@@ -51,15 +52,17 @@ RESPONSE
 questions:
 {questions}
 
+character:
+{character}
+
 program:
-- Randomly generate 5 human characters with different gender, age, jobs.
-- From those characters, choose one that act as one seeking psychotherapy treatment.
-- Make up a story that cause this character to seek psychotherapy treatment.
-- Act as this character and answer questions above in Traditional Chinese. Return the tag RESPONSE just before your report. 
+- Make up a detail mental trauma that cause the character to seek psychotherapy.
+- Make up a detail chat style of this character that is unique for this character based on its background.
+- Act as this character and reply each questions with its chat style you defined strictly in Traditional Chinese. Return the tag RESPONSE just before your answer.
 
 State each step of the program and show your work for performing that step.
 
-1: Randomly generate 5 human characters with different gender, age, jobs.
+1: Make up a detail mental trauma that cause the character to seek psychotherapy.
 
 """
 
@@ -67,7 +70,7 @@ State each step of the program and show your work for performing that step.
         return text
 
     prompt = [
-        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "system", "content": "You are a helpful assistant, you can deal with both Traditional Chinese and English well."},
         {"role": "user", "content": text}
     ]
 
@@ -98,8 +101,8 @@ def chat_request(prompt: list, model: str = "gpt-3.5-turbo", temperature: float 
     usage = (completions['usage']['prompt_tokens'], completions['usage']['completion_tokens'])
     return response, usage
 
-def task(questions: list, progress_bar: tqdm, model: str = "gpt-3.5-turbo", temperature: float = 0.7, max_tokens: int = 1000):
-    prompt = make_prompt(questions)
+def task(questions: list, character: str, progress_bar: tqdm, model: str = "gpt-3.5-turbo", temperature: float = 0.7, max_tokens: int = 1000):
+    prompt = make_prompt(questions, character)
     response, usage = chat_request(prompt, model, temperature, max_tokens)
     responses.append(response)
     usages.append(usage)
@@ -109,12 +112,18 @@ def main():
     parser = argparse.ArgumentParser(description="Generate dummy answers to a list of questions for psychotherapy report test.")
     parser.add_argument("--model", type=str, default="gpt-4")
     parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--max_tokens", type=int, default=1000)
+    parser.add_argument("--max_tokens", type=int, default=1500)
     parser.add_argument("--thread_num", type=int, default=2)
     parser.add_argument("--request_num", type=int, default=8)
     parser.add_argument("--questions_path", type=str, default="questions.json")
+    parser.add_argument("--characters_path", type=str, default="characters.json")
     parser.add_argument("--openai_api_key", type=str, default=None)
     args = parser.parse_args()
+
+    cost_per_request_estimate = 0.04
+    print(f"Estimated cost per request: ${cost_per_request_estimate*args.request_num}")
+    if input("Continue? (y/n): ") != "y":
+        return
 
     if args.openai_api_key:
         openai.api_key = args.openai_api_key
@@ -124,6 +133,8 @@ def main():
         raise ValueError("Please set OPENAI_API_KEY in environment variable or pass it as argument by `--openai_api_key <your api key>`.")
 
     questions = json.load(open(args.questions_path, "r"))
+    characters = json.load(open(args.characters_path, "r"))
+    random.shuffle(characters)
 
     total_cost = 0.0
 
@@ -140,8 +151,10 @@ def main():
             else:
                 thread_workers = args.thread_num
 
-            for _ in range(thread_workers):
-                thread = threading.Thread(target=task, args=(questions, progress_bar, args.model, args.temperature, args.max_tokens))
+            for i in range(thread_workers):
+                character = characters[global_counter+i]
+
+                thread = threading.Thread(target=task, args=(questions, character, progress_bar, args.model, args.temperature, args.max_tokens))
                 thread.start()
                 threads.append(thread)
     
