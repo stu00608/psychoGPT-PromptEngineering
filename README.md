@@ -36,12 +36,13 @@ The scripts supports several command line arguments:
 
 - `--request_num`: Number of fictitious answer requests (default is 8).
 - `--characters_path`: Path to the JSON file containing the list of characters (default is "characters.json").
+- `--answers_template_path`: Path to the JSON file containing the answers template (default is "answers_template.json").
 
 ```bash
-python generate_answer.py --model gpt-4 --temperature 0.7 --max_tokens 1200 --thread_num 2 --request_num 8 --questions_path questions.json --characters_path characters.json --openai_api_key <your-api-key>
+python generate_answer.py --model gpt-4 --temperature 0.7 --max_tokens 2000 --thread_num 8 --request_num 10 --questions_path questions.json --characters_path characters.json --answers_template_path answers_template.json --openai_api_key <your-api-key>
 ```
 
-Generate 100 answers cost about $4
+Generate 100 answers cost about $2
 
 ### `generate_report.py`
 
@@ -86,7 +87,7 @@ Name: 陳小芬, Gender: 女, Age: 28, Job: 教師, Personality: 熱情、健談
 Then, you can run `generate_answer.py` as follows:
 
 ```bash
-python generate_answer.py --model gpt-4 --temperature 0.7 --max_tokens 1000 --thread_num 2 --request_num 10 --questions_path questions.json --characters_path characters.json --openai_api_key <your_api_key>
+python generate_answer.py --model gpt-4 --temperature 0.7 --max_tokens 2000 --thread_num 8 --request_num 10 --questions_path questions.json --characters_path characters.json --answers_template_path answers_template.json --openai_api_key <your-api-key>
 ```
 
 The script will generate 10 responses to these questions, emulating the persona of a character in need of psychotherapy treatment. The responses will be saved in directories: `answers`, `cleaned_answers`, and `extracted_failed_answers`.

@@ -1,0 +1,9 @@
+{
+    "mental_trauma": "<mental trauma you made up in Traditional Chinese>",
+    "background_description": "<personal information you made up in Traditional Chinese>",
+    "chat_style": "<chat style you made up in Traditional Chinese>",
+    "reply": [
+        "<array of strings contain all replies>",
+        "..."
+    ]
+}
