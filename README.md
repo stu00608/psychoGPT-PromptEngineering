@@ -53,7 +53,7 @@ Generate 100 answers cost about $2
 python generate_report.py --model gpt-3.5-turbo --temperature 0.7 --max_tokens 1000 --thread_num 2 --questions_path questions.json --response_template_path response_template.json --answers_path ./cleaned_answers/ --openai_api_key <your-api-key>
 ```
 
-Generate 100 reports cost about $0.2
+Generate 100 reports cost about $2
 
 
 ## Example

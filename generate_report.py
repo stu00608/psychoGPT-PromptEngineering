@@ -28,7 +28,7 @@ You always think step-by-step. Be very thorough and explicit.
 You make report only from the facts you know.
 You always make the report professionally and objectively.
 
-You must respond in Traditional Chinese with JSON of form:
+You must respond in Traditional Chinese with valid JSON of form:
 ```
 {json.dumps(response_template, indent=4, ensure_ascii=False)}
 ```
@@ -131,7 +131,7 @@ def main():
         description="Generate report for psychotherapy treatment from completed questionnaire.")
     parser.add_argument("--model", type=str, default="gpt-3.5-turbo")
     parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--max_tokens", type=int, default=1000)
+    parser.add_argument("--max_tokens", type=int, default=1500)
     parser.add_argument("--thread_num", type=int, default=4)
     parser.add_argument("--questions_path", type=str, default="questions.json")
     parser.add_argument("--answers_path", type=str,
@@ -153,6 +153,12 @@ def main():
     response_template = json.load(
         open(args.response_template_path, "r"))
     answers_path = get_all_txt_path(args.answers_path)
+
+    cost_per_request_estimate = 0.02
+    print(
+        f"Estimated cost per request: ${cost_per_request_estimate*len(answers_path)}")
+    if not input("Continue? (y/n): ").lower().startswith('y'):
+        return
 
     total_cost = 0.0
 
