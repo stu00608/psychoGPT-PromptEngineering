@@ -1,4 +1,6 @@
 {
+    "background_description": "<background you analyzed in Traditional Chinese>",
+    "chat_style": "<chat style you analyzed in Traditional Chinese>",
     "report": {
         "name": "<Traditional Chinese string>",
         "personal_information": "<Traditional Chinese string>",

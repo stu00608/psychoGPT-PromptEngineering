@@ -23,6 +23,7 @@ answers:
 {answers}
 
 Based on the questions and answers, summarize a detail report for psychotherapist to better and quicker understand the situation about this individual. 
+Based on the questions and answers above as a conversation sequence, analyze the background and chat style in great detail using Traditional Chinese.
 
 You always think step-by-step. Be very thorough and explicit.
 You make report only from the facts you know.
@@ -73,7 +74,7 @@ def check_response(response: dict, response_template_path: str = "response_templ
 
 def format_response(response: dict) -> str:
     """Format the response dictionary values to a Markdown string."""
-    markdown = "# {} 的分析報告\n\n## 個人資料\n{}\n\n## 想要解決的問題\n{}\n\n## 問題的緣由\n{}\n\n## 疾病歷史\n{}\n\n## 個人背景\n{}\n\n## 社交關係\n{}\n\n## 家庭關係\n{}\n\n## 家庭背景\n{}\n\n## 治療目標\n{}\n\n## 遺漏資訊\n{}".format(
+    markdown = "# {} 的分析報告\n\n## 個人資料\n{}\n\n## 想要解決的問題\n{}\n\n## 問題的緣由\n{}\n\n## 疾病歷史\n{}\n\n## 個人背景\n{}\n\n## 社交關係\n{}\n\n## 家庭關係\n{}\n\n## 家庭背景\n{}\n\n## 治療目標\n{}\n\n## 遺漏資訊\n{}\n\n---\n\n## 聊天風格\n{}\n\n## 背景描述\n{}\n".format(
         response["report"]["name"],
         response["report"]["personal_information"],
         response["report"]["presenting_issue"],
@@ -84,7 +85,9 @@ def format_response(response: dict) -> str:
         response["report"]["family_relationships"],
         response["report"]["family_background"],
         response["report"]["therapy_goals"],
-        response["report"]["missing_information"]
+        response["report"]["missing_information"],
+        response["chat_style"],
+        response["background_description"]
     )
     return markdown
 
@@ -218,11 +221,13 @@ def main():
 
                 markdown = format_response(response_json)
 
-                with open(f"reports/{filename}", "w", encoding='utf-8') as f:
+                answer_filename = filename.replace(".txt", ".json")
+                with open(f"reports/{answer_filename}", "w", encoding='utf-8') as f:
                     f.write(json.dumps(response_json, indent=4,
                             ensure_ascii=False))
 
-                with open(f"cleaned_reports/{filename}", "w") as f:
+                md_filename = filename.replace(".txt", ".md")
+                with open(f"cleaned_reports/{md_filename}", "w", encoding="utf-8") as f:
                     f.write(markdown)
 
             # gpt-3.5-turbo Pricing
@@ -245,9 +250,6 @@ def main():
             end_time = time.time()
             print(
                 f"Time spent: {end_time-start_time} seconds.\n====================\n")
-            # if end_time-start_time < 60:
-            #     print("Sleep until 1 min.")
-            #     time.sleep(60-(end_time-start_time))
 
     print(
         f"====================\nDone all.\nTotal cost: ${total_cost}\nAverage cost per report: ${sum(total_cost_list)/len(total_cost_list)}\nTotal time spent: {time.time()-general_timer} seconds.\n====================\n")
